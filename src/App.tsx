@@ -56,19 +56,47 @@ function App() {
       }
     };
 
+    // Shake detection
+    let lastShake = 0;
+    const handleMotion = (event: DeviceMotionEvent) => {
+      const acc = event.accelerationIncludingGravity;
+      if (!acc) return;
+      const threshold = 15;
+      const delta = Math.sqrt((acc.x || 0) ** 2 + (acc.y || 0) ** 2 + (acc.z || 0) ** 2);
+      
+      if (delta > threshold) {
+        const now = Date.now();
+        if (now - lastShake > 1000) {
+          lastShake = now;
+          stopGame();
+        }
+      }
+    };
+
     window.addEventListener('resize', handleResize);
+    window.addEventListener('devicemotion', handleMotion);
     handleResize();
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('devicemotion', handleMotion);
       inputManager.current?.detach();
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
     };
   }, []);
 
-  const startGame = () => {
+  const startGame = async () => {
     if (!canvasRef.current) return;
     
+    // Request Motion Permission (iOS 13+)
+    if (typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+      try {
+        await (DeviceMotionEvent as any).requestPermission();
+      } catch (e) {
+        console.error('Motion permission denied');
+      }
+    }
+
     // Resume Audio Context
     audioManager.current?.init();
 
@@ -96,6 +124,12 @@ function App() {
     setIsPlaying(true);
     previousTimeRef.current = performance.now();
     requestRef.current = requestAnimationFrame(gameLoop);
+  };
+
+  const stopGame = () => {
+    setIsPlaying(false);
+    if (gameState.current) gameState.current.phase = 'MENU';
+    inputManager.current?.detach();
   };
 
   const gameLoop = (time: number) => {

@@ -28,40 +28,45 @@ export const render = (ctx: CanvasRenderingContext2D, state: GameState) => {
 
 const drawLantern = (ctx: CanvasRenderingContext2D, state: GameState) => {
   const { lantern } = state;
-  const { position, radius, color, energy } = lantern;
-  const colorHex = CONSTANTS.COLORS[color];
+  const { position, radius, targetColor, energy } = lantern;
+  const colorHex = CONSTANTS.COLORS[targetColor];
 
-  // Glow
-  const gradient = ctx.createRadialGradient(position.x, position.y, radius * 0.5, position.x, position.y, radius * 2);
+  // Large outer glow
+  const gradient = ctx.createRadialGradient(position.x, position.y, radius * 0.2, position.x, position.y, radius * 3);
   gradient.addColorStop(0, colorHex);
   gradient.addColorStop(1, 'transparent');
   ctx.fillStyle = gradient;
-  ctx.globalAlpha = 0.3 + (energy / 100) * 0.2; // Pulse with energy
+  ctx.globalAlpha = 0.2 + (energy / 100) * 0.3;
   ctx.beginPath();
-  ctx.arc(position.x, position.y, radius * 2, 0, Math.PI * 2);
+  ctx.arc(position.x, position.y, radius * 3, 0, Math.PI * 2);
   ctx.fill();
   ctx.globalAlpha = 1.0;
 
-  // Core
+  // Outer ring
   ctx.beginPath();
   ctx.arc(position.x, position.y, radius, 0, Math.PI * 2);
-  ctx.fillStyle = CONSTANTS.COLORS.LANTERN_BG;
-  ctx.fill();
-  ctx.strokeStyle = colorHex;
-  ctx.lineWidth = 4;
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 2;
   ctx.stroke();
 
-  // Energy Level (Fill inside)
+  // Core background
   ctx.beginPath();
-  ctx.arc(position.x, position.y, radius * (energy / 100), 0, Math.PI * 2);
+  ctx.arc(position.x, position.y, radius - 2, 0, Math.PI * 2);
+  ctx.fillStyle = CONSTANTS.COLORS.LANTERN_BG;
+  ctx.fill();
+
+  // Energy fill (Inner circle)
+  ctx.beginPath();
+  const energyRadius = (radius - 5) * (energy / 100);
+  ctx.arc(position.x, position.y, Math.max(0, energyRadius), 0, Math.PI * 2);
   ctx.fillStyle = colorHex;
   ctx.fill();
 };
 
 const drawSpark = (ctx: CanvasRenderingContext2D, spark: any) => {
-  const colorHex = CONSTANTS.COLORS[spark.color];
+  const colorHex = CONSTANTS.COLORS[spark.color as keyof typeof CONSTANTS.COLORS] || '#FFFFFF';
   
-  ctx.shadowBlur = 10;
+  ctx.shadowBlur = 15;
   ctx.shadowColor = colorHex;
   ctx.fillStyle = colorHex;
   ctx.beginPath();
@@ -71,23 +76,48 @@ const drawSpark = (ctx: CanvasRenderingContext2D, spark: any) => {
 };
 
 const drawGravityField = (ctx: CanvasRenderingContext2D, position: Vector2) => {
-  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-  ctx.lineWidth = 2;
+  // Ripple effect or simple circle
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.arc(position.x, position.y, CONSTANTS.GRAVITY_RADIUS, 0, Math.PI * 2);
   ctx.stroke();
 
-  // Finger point
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+  // Inner glow at finger
+  const grad = ctx.createRadialGradient(position.x, position.y, 0, position.x, position.y, 40);
+  grad.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+  grad.addColorStop(1, 'transparent');
+  ctx.fillStyle = grad;
   ctx.beginPath();
-  ctx.arc(position.x, position.y, 20, 0, Math.PI * 2);
+  ctx.arc(position.x, position.y, 40, 0, Math.PI * 2);
   ctx.fill();
 };
 
 const drawUI = (ctx: CanvasRenderingContext2D, state: GameState) => {
-  // Simple Score
-  ctx.font = '20px Arial';
+  const { lantern, score } = state;
+  const targetColorHex = CONSTANTS.COLORS[lantern.targetColor];
+
+  // Score
+  ctx.font = 'bold 24px Arial';
   ctx.fillStyle = 'white';
   ctx.textAlign = 'left';
-  ctx.fillText(`Score: ${state.score}`, 20, 30);
+  ctx.fillText(`Score: ${score}`, 30, 45);
+
+  // Target Color Indicator (Top Right)
+  const uiRadius = 20;
+  const uiX = state.screenSize.x - 50;
+  const uiY = 45;
+
+  ctx.fillStyle = 'white';
+  ctx.font = '16px Arial';
+  ctx.textAlign = 'right';
+  ctx.fillText('Target:', uiX - 30, uiY + 5);
+
+  ctx.beginPath();
+  ctx.arc(uiX, uiY, uiRadius, 0, Math.PI * 2);
+  ctx.fillStyle = targetColorHex;
+  ctx.fill();
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 2;
+  ctx.stroke();
 };
