@@ -2,6 +2,8 @@
 
 A collaborative, asymmetric mobile web game for a toddler and a parent playing on a single device.
 
+**Live Game**: [https://andys8.github.io/game-glow/](https://andys8.github.io/game-glow/)
+
 **Design Doc**: [GEMINI.md](./GEMINI.md)
 
 ## How to Play
