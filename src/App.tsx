@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
-import { GameState, CONSTANTS, PlayerInput } from './types';
+import { CONSTANTS } from './types';
+import type { GameState, PlayerInput } from './types';
 import { createSpark, updatePhysics, applyGravity, updateLantern, checkCollisions } from './systems/GameLogic';
 import { render } from './systems/Renderer';
 import { InputManager } from './systems/InputManager';
@@ -187,9 +188,26 @@ function App() {
       
       {!isPlaying && (
         <div className="overlay">
-          <h1>Guardians of the Glow</h1>
-          <p>A game for Toddler & Parent</p>
-          <button onClick={startGame} style={{ padding: '20px', fontSize: '24px' }}>Start Game</button>
+          <h1 className="title">Guardians of the Glow</h1>
+          
+          <div className="instructions">
+            <div className="role toddler">
+              <h3>👶 Toddler</h3>
+              <p>Tap the dark to make <strong>Sparks</strong>!</p>
+            </div>
+            
+            <div className="role parent">
+              <h3>👨 Parent</h3>
+              <p>Drag to herd Sparks into the <strong>Lantern</strong>.</p>
+              <p>Only match the <strong>Lantern's color</strong>!</p>
+            </div>
+
+            <div className="goal">
+              <p>✨ Keep the light alive together. ✨</p>
+            </div>
+          </div>
+
+          <button className="start-button" onClick={startGame}>Start Playing</button>
         </div>
       )}
 

@@ -1,8 +1,8 @@
-import {
+import { CONSTANTS } from '../types';
+import type {
   GameState,
   Spark,
   Vector2,
-  CONSTANTS,
   SparkColor,
   LanternState,
   PlayerInput

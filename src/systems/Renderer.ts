@@ -1,4 +1,5 @@
-import { GameState, CONSTANTS, Vector2 } from '../types';
+import { CONSTANTS } from '../types';
+import type { GameState, Vector2 } from '../types';
 
 export const render = (ctx: CanvasRenderingContext2D, state: GameState) => {
   const { width, height } = ctx.canvas;

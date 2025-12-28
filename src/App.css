@@ -10,24 +10,72 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: white;
   z-index: 10;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
 }
 
-button {
-  margin-top: 20px;
-  background: #333;
-  color: white;
-  border: 2px solid #666;
-  border-radius: 10px;
+.title {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #00FFFF;
+  text-shadow: 0 0 10px #00FFFF;
+}
+
+.instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 400px;
+  margin-bottom: 2rem;
+}
+
+.role {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.role h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.5rem;
+}
+
+.role.toddler {
+  border-left: 5px solid #00FF00;
+}
+
+.role.parent {
+  border-left: 5px solid #FF00FF;
+}
+
+.goal {
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #FFFF00;
+}
+
+.start-button {
+  padding: 20px 40px;
+  font-size: 1.5rem;
+  background: #00FFFF;
+  color: black;
+  border: none;
+  border-radius: 50px;
+  font-weight: bold;
   cursor: pointer;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
 }
 
-button:active {
-  background: #555;
+.start-button:active {
+  transform: scale(0.95);
 }

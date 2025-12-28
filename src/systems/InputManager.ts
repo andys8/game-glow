@@ -1,4 +1,5 @@
-import { Vector2, PlayerInput, CONSTANTS } from '../types';
+import { CONSTANTS } from '../types';
+import type { Vector2, PlayerInput } from '../types';
 
 export type InputEventCallback = (position: Vector2) => void;
 

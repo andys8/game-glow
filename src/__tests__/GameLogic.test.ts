@@ -1,5 +1,6 @@
 import { updatePhysics, applyGravity, checkCollisions, updateLantern } from '../systems/GameLogic';
-import { GameState, Spark, CONSTANTS, PlayerInput, Vector2 } from '../types';
+import { CONSTANTS } from '../types';
+import type { GameState, Spark, PlayerInput, Vector2 } from '../types';
 
 describe('GameLogic', () => {
   const mockScreen: Vector2 = { x: 1000, y: 1000 };
