@@ -8,6 +8,7 @@ import { InputManager } from './systems/InputManager';
 import { AudioManager } from './systems/AudioManager';
 
 function App() {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isPlaying, setIsPlaying] = useState(false); // Start overlay
   
@@ -89,6 +90,15 @@ function App() {
   const startGame = async () => {
     if (!canvasRef.current) return;
     
+    // Request Fullscreen for safety and immersion
+    if (containerRef.current?.requestFullscreen) {
+      try {
+        await containerRef.current.requestFullscreen();
+      } catch (err) {
+        console.warn('Fullscreen request failed:', err);
+      }
+    }
+
     // Request Motion Permission (iOS 13+)
     if (typeof window !== 'undefined' && 'DeviceMotionEvent' in window && typeof (window.DeviceMotionEvent as any).requestPermission === 'function') {
       try {
@@ -183,7 +193,7 @@ function App() {
   };
 
   return (
-    <div className="game-container">
+    <div className="game-container" ref={containerRef}>
       <canvas ref={canvasRef} />
       
       {!isPlaying && (
