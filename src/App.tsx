@@ -90,11 +90,11 @@ function App() {
     if (!canvasRef.current) return;
     
     // Request Motion Permission (iOS 13+)
-    if (typeof (DeviceMotionEvent as any).requestPermission === 'function') {
+    if (typeof window !== 'undefined' && 'DeviceMotionEvent' in window && typeof (window.DeviceMotionEvent as any).requestPermission === 'function') {
       try {
-        await (DeviceMotionEvent as any).requestPermission();
+        await (window.DeviceMotionEvent as any).requestPermission();
       } catch (e) {
-        console.error('Motion permission denied');
+        console.error('Motion permission denied', e);
       }
     }
 
